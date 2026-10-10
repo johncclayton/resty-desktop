@@ -510,13 +510,18 @@ npm run clean       # remove dist/ and src-tauri/target/
 
 ### Issue tracker
 
-Issues and specs live as markdown files under `.scratch/<feature-slug>/`, which is gitignored (keeps
-work items out of upstream PR diffs). See `docs/agents/issue-tracker.md`.
+Issues and specs live as **GitHub issues on the fork** (`johncclayton/resty-desktop`), reached with
+the `gh` CLI. A feature is one `spec`-labelled tracking issue whose implementation slices are its
+sub-issues. Nothing enters the git tree, so work items still stay out of upstream PR diffs. See
+`docs/agents/issue-tracker.md`.
+
+`.scratch/` remains gitignored and is still the right place for local throwaway tooling (the Explore
+verification harness lives at `.scratch/explorer/verification/`), but it is no longer the tracker.
 
 ### Triage labels
 
-The five canonical roles, each label string equal to its name; recorded as a `Status:` line in each
-issue file. See `docs/agents/triage-labels.md`.
+The five canonical roles, each label string equal to its name, as real GitHub labels. Completion is
+the issue's own closed-as-completed state, not a label. See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
