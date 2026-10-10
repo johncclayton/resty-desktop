@@ -16,6 +16,10 @@ dist-ssr
 .claude/plans/
 .claude/settings.local.json
 
+# Local-markdown issue tracker (specs and tickets) — see docs/agents/issue-tracker.md.
+# Deliberately untracked: keeps work items out of upstream PR diffs and off every rebase.
+.scratch/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

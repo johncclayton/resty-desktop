@@ -505,3 +505,21 @@ npm run tauri dev   # requires Rust installed
 npm run tauri build # distributable
 npm run clean       # remove dist/ and src-tauri/target/
 ```
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as markdown files under `.scratch/<feature-slug>/`, which is gitignored (keeps
+work items out of upstream PR diffs). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical roles, each label string equal to its name; recorded as a `Status:` line in each
+issue file. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root, both created lazily rather than
+upfront — their absence is expected, not a gap. Note that `docs/decisions.md` plays an ADR-like role
+and conflicts with it must be surfaced, never silently overridden. See `docs/agents/domain.md`.
