@@ -59,7 +59,7 @@ primary/secondary/danger/ghost variants
 
 ### `ContextMenu.tsx`
 
-Portal-rendered right-click menu; auto-nudges onto screen; closes on Escape/click-outside. Items are label-only by default; an item may carry an optional `icon` (a glyph from `icons.tsx`) rendered before the label, which the repository menu's "Explore Folder Tree" uses so both of Explore's entry points — row action and context menu — show the same glyph. The flex row is inert for icon-less items, so a single-child item lays out exactly as before
+Portal-rendered right-click menu; auto-nudges onto screen; closes on Escape/click-outside. **Items are deliberately label-only — `ContextMenuItemDef` has no icon field, and no menu item in the app carries a glyph.** The iconed surface is the row-level `ActionButton`, where the icon does real work: its label only reveals as text at the `wide` breakpoint, so below that the glyph is the whole affordance (which is why `FileListIcon` is drawn unlike `SearchIcon` — the two sit adjacent and icon-only on every repository row). Menu text is always present, so a glyph there is decoration, and a single iconed item also indents its own label 24px past every other item in the same menu, which reads as a layout bug rather than an affordance. An icon field was added for Explore and reverted for exactly this reason — don't re-add one for a single item; if menu icons are ever wanted, every item in every menu gets one, or all items reserve a leading gutter
 
 ### `EmptyState.tsx`
 

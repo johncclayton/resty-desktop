@@ -1,24 +1,21 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
+// Items are deliberately label-only: no menu item in the app carries an icon. The
+// iconed surface is the row-level `ActionButton`, where the glyph does real work
+// (its label only reveals as text at the `wide` breakpoint, so below that the icon
+// is the whole affordance). In a menu the text is always present, so a glyph would
+// be decoration — and one iconed item among many also indents its own label past
+// every other, which reads as a layout bug. See docs/frontend.md.
 export type ContextMenuItemDef =
   | {
       label: string;
-      /** Optional leading glyph, from `icons.tsx`. Most items are label-only. */
-      icon?: ReactNode;
       onClick: () => void;
       variant?: "default" | "danger";
       disabled?: boolean;
       separator?: never;
     }
-  | {
-      separator: true;
-      label?: never;
-      icon?: never;
-      onClick?: never;
-      variant?: never;
-      disabled?: never;
-    };
+  | { separator: true; label?: never; onClick?: never; variant?: never; disabled?: never };
 
 type Props = {
   x: number;
@@ -65,14 +62,13 @@ export default function ContextMenu({ x, y, items, onClose }: Props) {
             key={i}
             disabled={item.disabled}
             onClick={() => { onClose(); item.onClick?.(); }}
-            className={`w-full flex items-center gap-2 text-left px-3 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`w-full text-left px-3 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               item.variant === "danger"
                 ? "text-red-400 hover:bg-red-900/30 hover:text-red-300"
                 : "text-gray-300 hover:bg-gray-800 hover:text-gray-50"
             }`}
           >
-            {item.icon}
-            <span>{item.label}</span>
+            {item.label}
           </button>
         )
       )}

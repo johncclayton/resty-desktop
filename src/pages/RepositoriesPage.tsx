@@ -1556,7 +1556,6 @@ export default function RepositoriesPage() {
             },
             {
               label: "Explore Folder Tree",
-              icon: <FileListIcon className="w-4 h-4 flex-shrink-0" />,
               onClick: () => navigate(`/snapshots/${contextMenu.repo.id}/explore`),
             },
             {
