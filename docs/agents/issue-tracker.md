@@ -24,6 +24,11 @@ local git config no fresh clone inherits; the explicit flag travels with the doc
 verification harness lives at `.scratch/explorer/verification/` — but it is **not** the issue
 tracker. Don't create ticket or spec markdown there.
 
+That ignore line lives in `main`'s `.gitignore`, so a **feature branch cut from `upstream/main`
+does not carry it** and `.scratch/` shows up untracked there, one `git add -A` away from the
+upstream PR. Keep it ignored per-clone in `.git/info/exclude` instead of re-adding the line to a
+branch — the file is local, so the ignore applies on every branch without entering any diff.
+
 ## Conventions
 
 - One feature is one **spec issue**: the specification in the body, labelled `spec`, acting as the
