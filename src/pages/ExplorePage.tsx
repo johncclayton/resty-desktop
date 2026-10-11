@@ -140,7 +140,7 @@ export default function ExplorePage() {
         snapshot: snapshotById.get(entry.snapshotId),
         initialPath: path,
         initialPathStack: stack,
-        fromSearch: true,
+        fromList: true,
         backLabel: "Explore",
       },
     });

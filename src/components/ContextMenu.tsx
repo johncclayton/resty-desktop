@@ -1,15 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 export type ContextMenuItemDef =
   | {
       label: string;
+      /** Optional leading glyph, from `icons.tsx`. Most items are label-only. */
+      icon?: ReactNode;
       onClick: () => void;
       variant?: "default" | "danger";
       disabled?: boolean;
       separator?: never;
     }
-  | { separator: true; label?: never; onClick?: never; variant?: never; disabled?: never };
+  | {
+      separator: true;
+      label?: never;
+      icon?: never;
+      onClick?: never;
+      variant?: never;
+      disabled?: never;
+    };
 
 type Props = {
   x: number;
@@ -56,13 +65,14 @@ export default function ContextMenu({ x, y, items, onClose }: Props) {
             key={i}
             disabled={item.disabled}
             onClick={() => { onClose(); item.onClick?.(); }}
-            className={`w-full text-left px-3 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`w-full flex items-center gap-2 text-left px-3 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               item.variant === "danger"
                 ? "text-red-400 hover:bg-red-900/30 hover:text-red-300"
                 : "text-gray-300 hover:bg-gray-800 hover:text-gray-50"
             }`}
           >
-            {item.label}
+            {item.icon}
+            <span>{item.label}</span>
           </button>
         )
       )}

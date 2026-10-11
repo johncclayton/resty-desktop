@@ -474,7 +474,7 @@ git push origin v0.0.X
 ## Testing
 
 - Frontend tests use **Vitest**; test files live alongside source as `src/lib/*.test.ts`.
-- Rust unit tests use `#[cfg(test)]` modules in `scheduler.rs`, `cache_warmer.rs`, and `commands/{auth,backends,backup_plan,cache,crypto,repo,repo_locks,snapshot,schedule,transfer,browse}.rs`.
+- Rust unit tests use `#[cfg(test)]` modules in `scheduler.rs`, `cache_warmer.rs`, and `commands/{auth,backends,backup_plan,cache,crypto,repo,repo_locks,snapshot,schedule,transfer,browse,explore}.rs`.
 - CI (`.github/workflows/test.yml`) runs on every push that isn't a `v*` tag and on PRs.
 
 ```bash

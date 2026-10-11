@@ -4100,6 +4100,77 @@ mod tests {
         assert_eq!(paths, vec!["/home/mine.txt"]);
     }
 
+    /// Exclusion here is structural — `list_repo_children` has no `orphaned_at` predicate,
+    /// it just can't join a snapshot that left `snapshots_cache` (and, once marked, has no
+    /// `browse_cache_status` row either). Retention is the orphan source that exercises
+    /// that: `set_snapshots` drops the forgotten id and touches nothing else, so the repo,
+    /// its sibling snapshots, the dropped snapshot's 'complete' status row and its file
+    /// rows all survive the drop. Keeping a sibling in the fixture is what makes the
+    /// assertions falsifiable: without one, an empty listing would prove nothing.
+    #[test]
+    fn list_repo_children_excludes_a_retention_dropped_snapshot_but_keeps_its_siblings() {
+        let db = test_db();
+        seed_repo(&db, "repo1");
+        db.set_snapshots(
+            "repo1",
+            &format!(
+                "[{},{}]",
+                snapshot_json("aaaa111100000000", None),
+                snapshot_json("bbbb222200000000", None)
+            ),
+        )
+        .unwrap();
+        for snap in ["aaaa111100000000", "bbbb222200000000"] {
+            db.set_browse_status("repo1", snap, "complete").unwrap();
+        }
+        db.insert_browse_files(
+            "aaaa111100000000",
+            &[file_entry("/home/dropped.txt", "file", Some(1))],
+        )
+        .unwrap();
+        db.insert_browse_files(
+            "bbbb222200000000",
+            &[file_entry("/home/kept.txt", "file", Some(1))],
+        )
+        .unwrap();
+
+        let paths = |db: &AppDb| -> Vec<String> {
+            db.list_repo_children("repo1", "/home")
+                .unwrap()
+                .into_iter()
+                .map(|r| r.path)
+                .collect()
+        };
+        assert_eq!(paths(&db), vec!["/home/dropped.txt", "/home/kept.txt"]);
+
+        // Retention forgets the older snapshot. The `sc` join stops matching at once, so
+        // the exclusion holds before any cleanup has run.
+        db.set_snapshots("repo1", &format!("[{}]", snapshot_json("bbbb222200000000", None)))
+            .unwrap();
+        assert_eq!(
+            paths(&db),
+            vec!["/home/kept.txt"],
+            "a forgotten snapshot's paths must drop out at once, while its sibling's remain"
+        );
+        assert_eq!(
+            count_rows(&db, "browse_cache_files"),
+            2,
+            "the dropped snapshot's rows are still undrained — exclusion is not a delete"
+        );
+
+        // ...and still after mark_orphans stamps it and deletes its status row.
+        db.mark_orphans().unwrap();
+        assert!(orphaned_at_of(&db, "aaaa111100000000").is_some());
+        assert_eq!(
+            paths(&db),
+            vec!["/home/kept.txt"],
+            "a marked orphan must stay out, and must not take its sibling with it"
+        );
+        assert_eq!(count_rows(&db, "browse_cache_files"), 2);
+    }
+
+    /// The repo-removal route to the same exclusion: `remove_repo` drops the repo's
+    /// `snapshots_cache` rows, so the join fails even before `mark_orphans` runs.
     #[test]
     fn list_repo_children_excludes_orphaned_snapshots() {
         let db = test_db();
