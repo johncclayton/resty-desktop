@@ -5,7 +5,8 @@ label strings used in this repo's issue tracker.
 
 This repo uses the defaults: each label string equals its role name. The tracker is GitHub Issues on
 the fork (see `issue-tracker.md`), so a label is a real GitHub label object — created once, applied
-with `gh issue edit --add-label`.
+with `gh issue edit <N> -R johncclayton/resty-desktop --add-label`. The `-R` is not optional — see
+`issue-tracker.md` on why a bare `gh` command lands on upstream.
 
 | Label in mattpocock/skills | Label in our tracker | Meaning                                  |
 | -------------------------- | -------------------- | ---------------------------------------- |
@@ -27,7 +28,8 @@ Edit the right-hand column to match whatever vocabulary you actually use.
   were created for this repo.
 - Apply **one** triage label at a time; they are mutually exclusive states.
 - All five are **pre-work** states. There is deliberately no completion label: a finished issue is
-  **closed as completed** (`gh issue close <N> --reason completed`), which is GitHub's own
+  **closed as completed** (`gh issue close <N> -R johncclayton/resty-desktop --reason completed`),
+  which is GitHub's own
   representation and needs no vocabulary of its own. The `resolved` string that the local-markdown
   era borrowed from the wayfinding vocabulary is gone.
 - `spec` is not a triage label — it marks a feature's tracking issue, and such an issue also carries

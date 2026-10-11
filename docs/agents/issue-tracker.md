@@ -9,8 +9,16 @@ own issue tracker, never as files in the git tree, so they stay out of upstream 
 every rebase — the same constraint the previous local-markdown tracker was built to satisfy, now met
 without giving up durability or a shared URL.
 
+**Every `gh` command here carries `-R johncclayton/resty-desktop`, and any new one must too.** A
+bare `gh` command resolves to the fork's *parent*, not the fork — this clone's git config holds
+`remote.upstream.gh-resolved = base`, so `gh issue list` lists upstream's issues, `gh issue view 3`
+shows upstream's #3 rather than slice #3, and `gh issue comment 3` would post agent chatter onto
+`nraboy/resty-desktop`. `gh repo set-default johncclayton/resty-desktop` also fixes it, but that is
+local git config no fresh clone inherits; the explicit flag travels with the doc.
+
 > Issues are disabled by default on a GitHub fork; they were enabled on this one with
-> `gh repo edit --enable-issues`. If `gh issue list` reports them disabled, that setting was reverted.
+> `gh repo edit johncclayton/resty-desktop --enable-issues`. If `gh issue list` reports them
+> disabled, that setting was reverted.
 
 `.scratch/` is still gitignored and still useful for local throwaway tooling — the Explore
 verification harness lives at `.scratch/explorer/verification/` — but it is **not** the issue
@@ -31,13 +39,13 @@ tracker. Don't create ticket or spec markdown there.
 ## Commands
 
 ```bash
-gh issue list                                  # open issues
-gh issue list --label ready-for-agent          # the AFK-ready frontier
-gh issue view <N> --comments                   # a ticket plus its history
-gh issue create --title "…" --body-file <f> --label <triage-label>
-gh issue comment <N> --body-file <f>
-gh issue edit <N> --add-label X --remove-label Y
-gh issue close <N> --reason completed
+gh issue list -R johncclayton/resty-desktop                              # open issues
+gh issue list -R johncclayton/resty-desktop --label ready-for-agent      # the AFK-ready frontier
+gh issue view <N> -R johncclayton/resty-desktop --comments               # a ticket plus its history
+gh issue create -R johncclayton/resty-desktop --title "…" --body-file <f> --label <triage-label>
+gh issue comment <N> -R johncclayton/resty-desktop --body-file <f>
+gh issue edit <N> -R johncclayton/resty-desktop --add-label X --remove-label Y
+gh issue close <N> -R johncclayton/resty-desktop --reason completed
 
 # attach an existing issue as a sub-issue of a spec issue (note -F, not -f: the API wants an integer)
 gh api -X POST repos/johncclayton/resty-desktop/issues/<spec>/sub_issues \
@@ -57,7 +65,8 @@ sub-issues of it. Apply the triage label the skill names.
 
 ## When a skill says "fetch the relevant ticket"
 
-`gh issue view <N> --comments`. The user will normally pass the issue number or URL directly.
+`gh issue view <N> -R johncclayton/resty-desktop --comments`. The user will normally pass the issue
+number or URL directly.
 
 ## Wayfinding operations
 
@@ -69,11 +78,11 @@ of it.
   (`research`/`prototype`/`grilling`/`task`) is a `type:<kind>` label; create it on first use.
 - **Blocking**: a `Blocked by #N, #N` line near the top of the body. A ticket is unblocked when
   every issue it names is closed.
-- **Frontier**: `gh issue list --label ready-for-agent` filtered to issues that are open, unblocked
-  and unassigned; lowest number wins.
-- **Claim**: `gh issue edit <N> --add-assignee @me` before any work.
-- **Resolve**: comment the answer, `gh issue close <N> --reason completed`, then append a context
-  pointer (gist + issue URL) to the map issue's Decisions-so-far.
+- **Frontier**: `gh issue list -R johncclayton/resty-desktop --label ready-for-agent` filtered to
+  issues that are open, unblocked and unassigned; lowest number wins.
+- **Claim**: `gh issue edit <N> -R johncclayton/resty-desktop --add-assignee @me` before any work.
+- **Resolve**: comment the answer, `gh issue close <N> -R johncclayton/resty-desktop --reason
+  completed`, then append a context pointer (gist + issue URL) to the map issue's Decisions-so-far.
 
 ## Existing features
 

@@ -512,8 +512,9 @@ npm run clean       # remove dist/ and src-tauri/target/
 
 Issues and specs live as **GitHub issues on the fork** (`johncclayton/resty-desktop`), reached with
 the `gh` CLI. A feature is one `spec`-labelled tracking issue whose implementation slices are its
-sub-issues. Nothing enters the git tree, so work items still stay out of upstream PR diffs. See
-`docs/agents/issue-tracker.md`.
+sub-issues. Nothing enters the git tree, so work items still stay out of upstream PR diffs. Every
+`gh` command needs `-R johncclayton/resty-desktop`: a bare one resolves to the fork's parent, so it
+reads — or worse, comments on — `nraboy/resty-desktop` instead. See `docs/agents/issue-tracker.md`.
 
 `.scratch/` remains gitignored and is still the right place for local throwaway tooling (the Explore
 verification harness lives at `.scratch/explorer/verification/`), but it is no longer the tracker.
